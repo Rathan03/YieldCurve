@@ -48,3 +48,11 @@ TEST(Curve_Point_Tests, Negative_DCF)
 
     EXPECT_THROW(lambda(),std::invalid_argument);
 }
+
+TEST(Curve_Point_Tests, Getter_Tests)
+{
+    CurvePoint point {1.0,2.0};
+
+    EXPECT_DOUBLE_EQ(1.0, point.get_time());
+    EXPECT_DOUBLE_EQ(2.0, point.get_dcf());
+}
