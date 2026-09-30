@@ -54,7 +54,12 @@ double YieldCurve::get_discount_factor(double time) const
     const CurvePoint& next_point = *it;
     const CurvePoint& prev_point = *(it-1);
 
-    return prev_point.get_dcf() + (next_point.get_dcf()-prev_point.get_dcf()) * (time - prev_point.get_time())/(next_point.get_time()-prev_point.get_time());
+    return interpolate_discount_factor(prev_point, next_point, time);
+}
+
+double YieldCurve::interpolate_discount_factor(const CurvePoint& previous, const CurvePoint& next, double time)
+{
+    return previous.get_dcf() + (next.get_dcf()-previous.get_dcf()) * (time - previous.get_time())/(next.get_time()-previous.get_time());
 }
 
 double YieldCurve::get_zero_rate(double time) const
@@ -109,4 +114,33 @@ const CurvePoint& YieldCurve::get_point(std::size_t index) const
     }
 
     return points[index];
+}
+
+const CurvePoint& YieldCurve::get_point_at_maturity(double time) const
+{
+    auto points = get_points();
+
+    if (time < points[0].get_time() || time > points.back().get_time())
+    {
+        throw std::out_of_range("Time falls outside yield curve range. No curve points at given maturity");
+    }
+
+    auto it = std::lower_bound(points.begin(), points.end(), time, [](const CurvePoint& a, double b){ return a.get_time() < b;});   
+
+    if (it == points.end() || it->get_time() != time)
+    {
+        throw std::out_of_range("No curve points at given maturity.");
+    }
+
+    return *it;
+}
+
+double YieldCurve::get_dcf_from_zero_rate(double time, double zero_rate)
+{
+    if (time <=0)
+    {
+        throw std::out_of_range("Time must be positive");
+    }
+
+    return std::exp(-zero_rate*time);
 }

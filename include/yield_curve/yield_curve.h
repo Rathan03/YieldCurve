@@ -18,7 +18,10 @@ public:
     double get_forward_rate(double start_time, double end_time) const;
     double get_par_rate(double maturity) const;
     const CurvePoint& get_point(std::size_t index) const;
+    const CurvePoint& get_point_at_maturity(double time) const;
+    static double get_dcf_from_zero_rate(double time, double zero_rate);
 
 private:
     std::vector<CurvePoint> points;
+    static double interpolate_discount_factor(const CurvePoint& previous, const CurvePoint& next, double time);
 };
