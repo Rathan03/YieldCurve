@@ -61,3 +61,21 @@ double YieldCurve::get_zero_rate(double time) const
 {
     return -(std::log(get_discount_factor(time)))/time;
 }
+
+double YieldCurve::get_forward_rate(double start_time, double end_time) const
+{
+    if (start_time <= 0)
+    {
+        throw std::invalid_argument("Start time of forward rate must be positive.");
+    }
+    
+    if (start_time >= end_time)
+    {
+        throw std::invalid_argument("Start time of forward rate must preceed end time.");
+    }
+
+    double dcf_1 = get_discount_factor(start_time);
+    double dcf_2 = get_discount_factor(end_time);
+
+    return (std::log(dcf_1)-std::log(dcf_2))/(end_time-start_time);
+}

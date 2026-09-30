@@ -3,6 +3,8 @@
 #include "yield_curve/yield_curve.h"
 
 #include <stdexcept>
+#include <algorithm>
+#include <cmath>
 
 TEST(Yield_Curve_Tests, Valid_Construction)
 {
@@ -161,4 +163,38 @@ TEST(Yield_Curve_Tests, Zero_Time_Zero_Rate)
     YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
 
     EXPECT_THROW(curve.get_zero_rate(0.0), std::out_of_range);  
+}
+
+TEST(Yield_Curve_Tests, Interpolated_Forward_Rate)
+{
+    CurvePoint p_1{1.0, 0.95};
+    CurvePoint p_2{2.0, 0.80};
+    CurvePoint p_3{3.0, 0.60};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    double expected =
+        (std::log(0.875) - std::log(0.70)) / (2.5 - 1.5);
+
+    EXPECT_DOUBLE_EQ(
+        curve.get_forward_rate(1.5, 2.5),
+        expected
+    );
+}
+
+TEST(Yield_Curve_Tests, Out_Of_Range_Forward_Rate)
+{
+    CurvePoint p_1{1.0, 0.95};
+    CurvePoint p_2{2.0, 0.80};
+    CurvePoint p_3{3.0, 0.60};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    double expected =
+        (std::log(0.875) - std::log(0.70)) / (2.5 - 1.5);
+
+    EXPECT_THROW(
+        curve.get_forward_rate(0.5, 2.5),
+        std::out_of_range
+    );
 }
