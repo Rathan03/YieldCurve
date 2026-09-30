@@ -10,6 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_library(
     YieldCurveLib
     src/curve_point.cpp
+    src/yield_curve.cpp
 )
 
 target_include_directories(YieldCurveLib PUBLIC include)
@@ -28,6 +29,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(
     YieldCurveTests
     tests/curve_point_test.cpp
+    tests/yield_curve_test.cpp
 
 )
 

@@ -10,6 +10,6 @@ class CurvePoint
         double get_dcf() const;
 
     private:
-        const double time;
-        const double dcf;
+        double time;
+        double dcf;
 };
