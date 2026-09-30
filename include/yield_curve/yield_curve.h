@@ -17,6 +17,7 @@ public:
     double get_zero_rate(double time) const;
     double get_forward_rate(double start_time, double end_time) const;
     double get_par_rate(double maturity) const;
+    const CurvePoint& get_point(std::size_t index) const;
 
 private:
     std::vector<CurvePoint> points;

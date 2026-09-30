@@ -100,3 +100,13 @@ double YieldCurve::get_par_rate(double maturity) const
 
     return (1 - get_discount_factor(maturity)) / denominator;
 }
+
+const CurvePoint& YieldCurve::get_point(std::size_t index) const
+{
+    if (index >= points.size())
+    {
+        throw std::out_of_range("Index is out of range.");
+    }
+
+    return points[index];
+}
