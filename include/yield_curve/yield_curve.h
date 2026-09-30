@@ -16,6 +16,7 @@ public:
     double get_discount_factor(double time) const;
     double get_zero_rate(double time) const;
     double get_forward_rate(double start_time, double end_time) const;
+    double get_par_rate(double maturity) const;
 
 private:
     std::vector<CurvePoint> points;

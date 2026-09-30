@@ -79,3 +79,24 @@ double YieldCurve::get_forward_rate(double start_time, double end_time) const
 
     return (std::log(dcf_1)-std::log(dcf_2))/(end_time-start_time);
 }
+
+double YieldCurve::get_par_rate(double maturity) const
+{
+    double denominator{};
+
+    int full_years = static_cast<int>(maturity);
+
+    for (int i{1}; i <= full_years; ++i)
+    {
+        denominator += get_discount_factor(i);
+    }
+
+    double fraction = maturity - full_years;
+
+    if (fraction > 0)
+    {
+        denominator += fraction * get_discount_factor(maturity);
+    }
+
+    return (1 - get_discount_factor(maturity)) / denominator;
+}

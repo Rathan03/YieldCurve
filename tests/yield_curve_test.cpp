@@ -198,3 +198,16 @@ TEST(Yield_Curve_Tests, Out_Of_Range_Forward_Rate)
         std::out_of_range
     );
 }
+
+TEST(Yield_Curve_Tests, Par_Rate)
+{
+    CurvePoint p_1{1.0, 0.95};
+    CurvePoint p_2{2.0, 0.80};
+    CurvePoint p_3{3.0, 0.60};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_NEAR(curve.get_par_rate(2.0), 0.11428, 1e-5);
+    EXPECT_NEAR(curve.get_par_rate(2.5), 0.14286, 1e-5);
+}
+
