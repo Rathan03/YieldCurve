@@ -118,3 +118,47 @@ TEST(Yield_Curve_Tests, Above_Curve)
     EXPECT_THROW(curve.get_discount_factor(3.5), std::out_of_range);
     
 }
+
+TEST(Yield_Curve_Tests, Known_Zero_Rate)
+{
+    CurvePoint p_1{1.0,0.95};
+    CurvePoint p_2{2.0,0.8};
+    CurvePoint p_3{3.0,0.6};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_NEAR(curve.get_zero_rate(2),0.11157, 1e-5);  
+}
+
+TEST(Yield_Curve_Tests, Interpolated_Zero_Rate)
+{
+    CurvePoint p_1{1.0,0.95};
+    CurvePoint p_2{2.0,0.8};
+    CurvePoint p_3{3.0,0.6};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_NEAR(curve.get_zero_rate(2.5),0.14266, 1e-5);  
+}
+
+TEST(Yield_Curve_Tests, Out_Of_Range_Zero_Rate)
+{
+    CurvePoint p_1{1.0,0.95};
+    CurvePoint p_2{2.0,0.8};
+    CurvePoint p_3{3.0,0.6};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_THROW(curve.get_zero_rate(3.5), std::out_of_range);  
+}
+
+TEST(Yield_Curve_Tests, Zero_Time_Zero_Rate)
+{
+    CurvePoint p_1{1.0,0.95};
+    CurvePoint p_2{2.0,0.8};
+    CurvePoint p_3{3.0,0.6};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_THROW(curve.get_zero_rate(0.0), std::out_of_range);  
+}

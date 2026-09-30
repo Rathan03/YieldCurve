@@ -14,6 +14,7 @@ public:
 
     std::span<const CurvePoint> get_points() const;
     double get_discount_factor(double time) const;
+    double get_zero_rate(double time) const;
 
 private:
     std::vector<CurvePoint> points;
