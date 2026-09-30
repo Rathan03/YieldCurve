@@ -13,6 +13,7 @@ public:
     void add_curve_points(std::span<const CurvePoint> points, bool replace_duplicates);
 
     std::span<const CurvePoint> get_points() const;
+    double get_discount_factor(double time) const;
 
 private:
     std::vector<CurvePoint> points;

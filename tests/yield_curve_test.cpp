@@ -46,3 +46,75 @@ TEST(Yield_Curve_Tests, Sorting_Check)
     EXPECT_DOUBLE_EQ(point_check_2.get_time(), p_2.get_time());
     EXPECT_DOUBLE_EQ(point_check_3.get_time(), p_3.get_time());
 }
+
+TEST(Yield_Curve_Tests, Midpoint_Interpolation)
+{
+    CurvePoint p_1{1.0,0.95};
+    CurvePoint p_2{2.0,0.8};
+    CurvePoint p_3{3.0,0.6};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_DOUBLE_EQ(curve.get_discount_factor(1.5), 0.875);
+    
+}
+
+TEST(Yield_Curve_Tests, Beginning_Interpolation)
+{
+    CurvePoint p_1{1.0,0.95};
+    CurvePoint p_2{2.0,0.8};
+    CurvePoint p_3{3.0,0.6};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_DOUBLE_EQ(curve.get_discount_factor(1.0), 0.95);
+    
+}
+
+TEST(Yield_Curve_Tests, End_Interpolation)
+{
+    CurvePoint p_1{1.0,0.95};
+    CurvePoint p_2{2.0,0.8};
+    CurvePoint p_3{3.0,0.6};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_DOUBLE_EQ(curve.get_discount_factor(2.0), 0.8);
+    
+}
+
+TEST(Yield_Curve_Tests, Arbitrary_Interpolation)
+{
+    CurvePoint p_1{1.0,0.95};
+    CurvePoint p_2{2.0,0.8};
+    CurvePoint p_3{3.0,0.6};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_DOUBLE_EQ(curve.get_discount_factor(2.25), 0.75);
+    
+}
+
+TEST(Yield_Curve_Tests, Below_Curve)
+{
+    CurvePoint p_1{1.0,0.95};
+    CurvePoint p_2{2.0,0.8};
+    CurvePoint p_3{3.0,0.6};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_THROW(curve.get_discount_factor(0.5), std::out_of_range);
+    
+}
+
+TEST(Yield_Curve_Tests, Above_Curve)
+{
+    CurvePoint p_1{1.0,0.95};
+    CurvePoint p_2{2.0,0.8};
+    CurvePoint p_3{3.0,0.6};
+
+    YieldCurve curve{std::vector<CurvePoint>{p_1, p_2, p_3}};
+
+    EXPECT_THROW(curve.get_discount_factor(3.5), std::out_of_range);
+    
+}

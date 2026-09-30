@@ -28,3 +28,26 @@ std::span<const CurvePoint> YieldCurve::get_points() const
 {
     return points;
 }
+
+double YieldCurve::get_discount_factor(double time) const
+{
+    auto points = get_points();
+    auto it = std::lower_bound(points.begin(), points.end(), time, [](const CurvePoint& a, double b){ return a.get_time() < b;});
+
+    if (time == points[0].get_time()) {return points[0].get_dcf();}
+    if (time == points.back().get_time()) {return points.back().get_dcf();}
+
+    if (it == points.begin())
+    {
+        throw std::out_of_range("Time given is before the range of yield curve.");
+    } else if (it == points.end())
+    {
+        throw std::out_of_range("Time given is after the range of yield curve.");
+    }
+
+
+    const CurvePoint& next_point = *it;
+    const CurvePoint& prev_point = *(it-1);
+
+    return prev_point.get_dcf() + (next_point.get_dcf()-prev_point.get_dcf()) * (time - prev_point.get_time())/(next_point.get_time()-prev_point.get_time());
+}
